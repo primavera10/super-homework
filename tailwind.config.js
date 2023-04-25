@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line no-undef
 module.exports = {
   content: [
     "./index.html",
@@ -20,7 +21,8 @@ module.exports = {
       lightGray: "#e5e7eb",
       violet:"#6366f1",
       red:'#ef4444',
-      white:"#ffffff"
+      white:"#ffffff",
+      cyan:"#14b8a6",
     },
     fontFamily:{
       sans: 'Carlito'

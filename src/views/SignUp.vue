@@ -1,37 +1,44 @@
 <template>
     <div class="container bg-white">
-        <div class="text-primary text-3xl my-6 font-bold text-center">
+        <div class="text-primary text-3xl my-8 font-bold text-center">
             Sign up a new user
         </div>
-        <div class="mt-12 flex flex-col gap-3">
-            <div>
+        <div class="text-center">
+            <div class="mt-12 flex flex-col gap-3">
                 <div>
-                    Enter your email
+                    <div>
+                        Enter your email
+                    </div>
+                    <input
+                        type="text"
+                        v-model="email"
+                        class="border-lightGray p-1 border-2 rounded focus:outline-none focus:border-violet "/>
+                    <div v-if="warnEmail === true" class="text-red">
+                        Please, enter your email
+                    </div>
                 </div>
-                <input
-                    type="text"
-                    v-model="email"
-                    class="border-lightGray p-1 border-2 rounded focus:outline-none focus:border-violet "/>
-                <div v-if="warnEmail === true" class="text-red">
-                    Please, enter your email
+                <div>
+                    <div>
+                        Create your password
+                    </div>
+                    <input
+                        type="password"
+                        v-model="password"
+                        class="border-lightGray p-1 border-2 rounded focus:outline-none focus:border-violet "/>
+                    <div v-if="warnPassword === true" class="text-red">
+                        Your password should contain at least 8 characters
+                    </div>
                 </div>
             </div>
-            <div>
-                <div>
-                    Create your password
-                </div>
-                <input
-                    type="password"
-                    v-model="password"
-                    class="border-lightGray p-1 border-2 rounded focus:outline-none focus:border-violet "/>
-                <div v-if="warnPassword === true" class="text-red">
-                    Your password should contain at least 8 characters
-                </div>
+            <button class="bg-primary text-white mt-20 rounded-3xl p-2" @click="signUp">
+                Create an account
+            </button>
+            <div class="mt-4 underline">
+                <router-link to="/SignIn" >
+                    Go back and Sign In
+                </router-link>
             </div>
         </div>
-        <button class="bg-primary text-white mt-20 rounded-3xl p-2" @click="signUp">
-            Create an account
-        </button>
     </div>
 </template>
 
