@@ -5,6 +5,26 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
+    container:{
+      center: true,
+      padding:{
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '4rem',
+        xl: '5rem',
+        '2xl': '6rem',
+      }
+    },
+    colors:{
+      primary: "#4f46e5",
+      lightGray: "#e5e7eb",
+      violet:"#6366f1",
+      red:'#ef4444',
+      white:"#ffffff"
+    },
+    fontFamily:{
+      sans: 'Carlito'
+    },
     extend: {},
   },
   plugins: [],
