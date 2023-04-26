@@ -13,7 +13,7 @@
                         type="text"
                         v-model="email"
                         class="border-lightGray p-1 border-2 rounded focus:outline-none focus:border-violet "/>
-                    <div v-if="warnEmail === true" class="text-red">
+                    <div v-if="warnEmail" class="text-red">
                         Please, enter your email
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                         type="password"
                         v-model="password"
                         class="border-lightGray p-1 border-2 rounded focus:outline-none focus:border-violet "/>
-                    <div v-if="warnPassword === true" class="text-red">
+                    <div v-if="warnPassword" class="text-red">
                         Your password should contain at least 8 characters
                     </div>
                 </div>

@@ -24,7 +24,7 @@
                     class="border-lightGray p-1 border-2 rounded focus:outline-none focus:border-violet "/>
             </div>
         </div>
-        <div v-if="hasError === true" class="text-red mt-2">
+        <div v-if="hasError" class="text-red mt-2">
             Failed to Sign In. Please check your password and email.
         </div>
         <button class="bg-primary text-white mt-20 rounded-3xl py-2 px-4 hover:bg-cyan" @click="signIn">
@@ -57,7 +57,7 @@
             // Signed in
             const user = userCredential.user;
             hasError.value = false;
-            router.push({path: '/MainPage'})
+            router.push({path: '/main-page'})
             // ...
         })
             .catch((error) => {
