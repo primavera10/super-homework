@@ -29,6 +29,19 @@
                         Your password should contain at least 8 characters
                     </div>
                 </div>
+                <div>
+                    Specify your role
+                    <div class="flex items-center justify-center gap-3 mt-1">
+                        <div class="flex justify-center gap-1">
+                            <input type="radio" id="teacher" value="teacher" v-model="role"/>
+                            <label for="teacher">Teacher</label>
+                        </div>
+                        <div class="flex justify-center gap-1">
+                            <input type="radio" id="student" value="student" v-model="role">
+                            <label for="student">Student</label>
+                        </div>
+                    </div>
+                </div>
             </div>
             <button class="bg-primary text-white mt-20 rounded-3xl px-4 py-2 hover:bg-cyan"  @click="signUp">
                 Create an account
@@ -90,6 +103,8 @@
                 })
         }
     }
+
+    const role = ref ('');
 
 </script>
 
