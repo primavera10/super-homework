@@ -30,11 +30,11 @@
                     </div>
                 </div>
             </div>
-            <button class="bg-primary text-white mt-20 rounded-3xl p-2" @click="signUp">
+            <button class="bg-primary text-white mt-20 rounded-3xl px-4 py-2 hover:bg-cyan"  @click="signUp">
                 Create an account
             </button>
             <div class="mt-4 underline">
-                <router-link to="/SignIn" >
+                <router-link to="/sign-in" >
                     Go back and Sign In
                 </router-link>
             </div>

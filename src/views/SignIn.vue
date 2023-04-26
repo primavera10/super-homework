@@ -31,7 +31,7 @@
             Sign In
         </button>
         <div class="underline mt-2">
-            <router-link to="/SignUp">
+            <router-link to="/sign-up">
                 Sign Up
             </router-link>
         </div>
