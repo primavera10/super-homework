@@ -43,11 +43,11 @@
                     </div>
                 </div>
             </div>
-            <button class="bg-primary text-white mt-20 rounded-3xl px-4 py-2 hover:bg-cyan"  @click="signUp">
+            <button class="bg-primary text-white mt-20 rounded-3xl px-4 py-2 hover:bg-cyan" @click="signUp">
                 Create an account
             </button>
             <div class="mt-4 underline">
-                <router-link to="/sign-in" >
+                <router-link to="/sign-in">
                     Go back and Sign In
                 </router-link>
             </div>
@@ -58,6 +58,8 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+    import { doc, setDoc } from "firebase/firestore";
+    import { db } from "../firebase"
 
     const email = ref('');
     const password = ref('');
@@ -84,27 +86,28 @@
         }
     }
 
-    function signUp() {
+    async function signUp() {
         if (email.value === "" || password.value.length < 8) {
             return checkInput()
         } else {
-            checkInput()
-            createUserWithEmailAndPassword(auth, email.value, password.value).then((userCredential) => {
-                // Signed in
+            try {
+                checkInput()
+                const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
                 const user = userCredential.user;
-                alert('You are registered')
-                // ...
-            })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode)
-                    console.log(errorMessage)
+                await setDoc(doc(db, "user-details", user.uid), {
+                    role: role.value,
                 })
+                alert('You are registered')
+            } catch (error:any) {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode)
+                console.log(errorMessage)
+            }
         }
     }
 
-    const role = ref ('');
+    const role = ref('');
 
 </script>
 

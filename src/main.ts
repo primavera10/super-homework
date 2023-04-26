@@ -14,6 +14,7 @@ app.use(VueFire,{
     firebaseApp,
     modules :[
         VueFireAuth(),
+
     ]
 })
 
