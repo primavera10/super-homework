@@ -6,6 +6,7 @@ import './assets/main.css'
 import { VueFire, VueFireAuth } from "vuefire";
 import { firebaseApp } from "@/firebase";
 
+
 const app = createApp(App)
 
 
