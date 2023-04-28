@@ -7,7 +7,7 @@
             <div class="text-lg">
                 1. Select date and time from calendar below
             </div>
-            <DatePicker expanded v-model="selectedDate" mode="dateTime" class="mt-4"/>
+            <DatePicker expanded v-model="selectedDate" :min-date="new Date()" mode="dateTime" class="mt-4"/>
         </div>
         <div class="mt-8">
             <div class="text-lg">
@@ -52,6 +52,7 @@
             checkData.value = true;
             return;
         }
+        checkData.value = false
         const docRef = await addDoc(collection(db, "events"), {
             createdAt: new Date(),
             date: selectedDate.value,
