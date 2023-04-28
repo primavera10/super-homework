@@ -29,12 +29,25 @@
                         Your password should contain at least 8 characters
                     </div>
                 </div>
+                <div>
+                    Specify your role
+                    <div class="flex items-center justify-center gap-3 mt-1">
+                        <div class="flex justify-center gap-1">
+                            <input type="radio" id="teacher" value="teacher" v-model="role"/>
+                            <label for="teacher">Teacher</label>
+                        </div>
+                        <div class="flex justify-center gap-1">
+                            <input type="radio" id="student" value="student" v-model="role">
+                            <label for="student">Student</label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button class="bg-primary text-white mt-20 rounded-3xl px-4 py-2 hover:bg-cyan"  @click="signUp">
+            <button class="bg-primary text-white mt-20 rounded-3xl px-4 py-2 hover:bg-cyan" @click="signUp">
                 Create an account
             </button>
             <div class="mt-4 underline">
-                <router-link to="/sign-in" >
+                <router-link to="/sign-in">
                     Go back and Sign In
                 </router-link>
             </div>
@@ -45,6 +58,8 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+    import { doc, setDoc } from "firebase/firestore";
+    import { db } from "../firebase"
 
     const email = ref('');
     const password = ref('');
@@ -71,25 +86,28 @@
         }
     }
 
-    function signUp() {
+    async function signUp() {
         if (email.value === "" || password.value.length < 8) {
             return checkInput()
         } else {
-            checkInput()
-            createUserWithEmailAndPassword(auth, email.value, password.value).then((userCredential) => {
-                // Signed in
+            try {
+                checkInput()
+                const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
                 const user = userCredential.user;
-                alert('You are registered')
-                // ...
-            })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode)
-                    console.log(errorMessage)
+                await setDoc(doc(db, "user-details", user.uid), {
+                    role: role.value,
                 })
+                alert('You are registered')
+            } catch (error:any) {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode)
+                console.log(errorMessage)
+            }
         }
     }
+
+    const role = ref('');
 
 </script>
 
