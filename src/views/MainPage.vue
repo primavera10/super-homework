@@ -7,9 +7,12 @@
         </span>
          to Super Homework!
     </div>
-    <div  class="text-lg text-center mt-6">
-        You are registered as {{role}}
+    <div v-if="role==='teacher'" class="text-lg  mt-12">
+        You are registered as a {{role}}, so you can add new events
     </div>
+        <router-link to="/main-page/add-event" class="bg-primary inline-block mt-6 rounded-2xl hover:bg-cyan text-white py-3 px-4">
+            Add new event
+        </router-link>
     <div class="text-center mt-8 mb-10">
         <Calendar expanded />
     </div>
@@ -21,7 +24,7 @@
     import { doc, getDoc } from "firebase/firestore";
     import { db } from "@/firebase";
     import { watch, ref } from "vue";
-    import { Calendar, DatePicker } from 'v-calendar';
+    import { Calendar } from 'v-calendar';
     import 'v-calendar/style.css';
 
     const user =  useCurrentUser();

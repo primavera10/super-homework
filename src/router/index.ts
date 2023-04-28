@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import SignUp from '../views/SignUp.vue'
 import SignIn from '../views/SignIn.vue'
 import MainPage from '../views/MainPage.vue'
+import AddEvent from '../views/AddEvent.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,6 +26,11 @@ const router = createRouter({
       path: '/main-page',
       name: 'Main Page',
       component: MainPage
+    },
+    {
+      path:'/main-page/add-event',
+      name:'Add event',
+      component: AddEvent
     }
   ]
 })
