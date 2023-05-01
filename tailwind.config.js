@@ -23,6 +23,7 @@ module.exports = {
       red:'#ef4444',
       white:"#ffffff",
       cyan:"#14b8a6",
+      darkGray:"#6b7280",
     },
     fontFamily:{
       sans: 'Carlito'
