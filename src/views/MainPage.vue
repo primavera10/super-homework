@@ -29,11 +29,8 @@
 
     const user =  useCurrentUser();
     const role = ref('');
-    const selectedDate = ref (new Date())
 
-    console.log(user.value)
     watch(user, async (newUser)=>{
-        console.log('туту')
         if (newUser){
             const docRef = doc(db,"user-details", newUser.uid);
             const docSnap = await getDoc(docRef);

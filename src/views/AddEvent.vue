@@ -33,7 +33,7 @@
 </template>
 <script setup lang="ts">
     import { DatePicker } from 'v-calendar';
-    import { collection, addDoc } from "firebase/firestore";
+    import { collection, addDoc, serverTimestamp } from "firebase/firestore";
     import { ref } from "vue";
     import { db } from "../firebase"
     import { useCurrentUser } from 'vuefire'
@@ -54,7 +54,7 @@
         }
         checkData.value = false
         const docRef = await addDoc(collection(db, "events"), {
-            createdAt: new Date(),
+            createdAt: serverTimestamp(),
             date: selectedDate.value,
             title: title.value,
             message: message.value,
@@ -64,6 +64,7 @@
             }
         })
         console.log("Document written with ID: ", docRef.id)
+        alert('A new event was created')
     }
 
 </script>
