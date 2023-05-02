@@ -22,9 +22,9 @@
 
 <script setup lang="ts">
     import { useCurrentUser } from 'vuefire'
-    import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+    import { collection, doc, where, query, getDoc, getDocs } from "firebase/firestore";
     import { db } from "@/firebase";
-    import { watch, ref, onMounted, computed } from "vue";
+    import { watch, ref, computed } from "vue";
     import { Calendar } from 'v-calendar';
     import 'v-calendar/style.css';
 
@@ -36,28 +36,28 @@
         if (newUser) {
             const docRef = doc(db, "user-details", newUser.uid);
             const docSnap = await getDoc(docRef);
-            role.value = docSnap.data().role;
+            const result = docSnap.data();
+            if (result){
+                role.value = result.role;
+                if (role.value === 'teacher') {
+                    const q = query(collection(db, 'events'), where('createdBy.uid', "==", newUser.uid))
+                    const events = await getDocs(q)
+                    events.forEach((doc: any) => {
+                        const data = doc.data()
+                        currentEvents.value.push({
+                            description: data.title,
+                            date: data.date.toDate(),
+                        });
+                    })
+                }
+            }
         }
     }, { immediate: true })
 
-    onMounted(async () => {
-        const events = await getDocs(collection(db, 'events'))
-        events.forEach((doc: any) => {
-            const data = doc.data()
-            console.log(data.date)
-            currentEvents.value.push({
-                description: data.title,
-                date: data.date.toDate(),
-            });
-        })
-    })
 
     const attributes = computed(() => {
-        if (currentEvents.value){
-            const arr =  [] as any [];
-            currentEvents.value.forEach((elem :any)=>{
-                arr.push({
-                    popover:{
+            return currentEvents.value.map((elem: any) => ({
+                    popover: {
                         label: elem.description
                     },
                     dot: {
@@ -65,9 +65,7 @@
                     },
                     dates: elem.date
                 })
-            })
-            return arr;
-        }
+            );
         }
     )
 
