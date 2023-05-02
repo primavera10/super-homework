@@ -26,15 +26,19 @@
             All fields must be fulfilled
         </div>
         <div @click="addEventData"
-             class="mt-6 mb-12 cursor-pointer w-fit rounded-xl py-2 px-4 text-white bg-primary hover:bg-cyan ">
+             class="mt-6  cursor-pointer w-fit rounded-xl py-2 px-4 text-white bg-primary hover:bg-cyan ">
             Submit
         </div>
+        <router-link to="/main-page"  class="mt-6 mb-12 inline-block cursor-pointer w-fit rounded-xl py-2 px-4 text-white bg-cyan hover:bg-primary ">
+            Go back to calendar
+        </router-link>
+
     </div>
 </template>
 <script setup lang="ts">
     import { DatePicker } from 'v-calendar';
     import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-    import { ref } from "vue";
+    import { onMounted, ref } from "vue";
     import { db } from "../firebase"
     import { useCurrentUser } from 'vuefire'
 
@@ -66,5 +70,6 @@
         console.log("Document written with ID: ", docRef.id)
         alert('A new event was created')
     }
+
 
 </script>
