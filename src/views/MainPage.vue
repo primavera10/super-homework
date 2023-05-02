@@ -15,7 +15,7 @@
             Add new event
         </router-link>
         <div class="text-center mt-8 mb-10">
-            <Calendar expanded/>
+            <Calendar expanded :attributes="attributes"/>
         </div>
     </div>
 </template>
@@ -24,13 +24,13 @@
     import { useCurrentUser } from 'vuefire'
     import { collection, doc, getDoc, getDocs } from "firebase/firestore";
     import { db } from "@/firebase";
-    import { watch, ref, onMounted } from "vue";
+    import { watch, ref, onMounted, computed } from "vue";
     import { Calendar } from 'v-calendar';
     import 'v-calendar/style.css';
 
     const user = useCurrentUser();
     const role = ref('');
-    const currentEvents = ref([]);
+    const currentEvents = ref([] as any[]);
 
     watch(user, async (newUser) => {
         if (newUser) {
@@ -43,10 +43,33 @@
     onMounted(async () => {
         const events = await getDocs(collection(db, 'events'))
         events.forEach((doc: any) => {
-            // doc.data() is never undefined for query doc snapshots
-            currentEvents.value.push(doc.data());
+            const data = doc.data()
+            console.log(data.date)
+            currentEvents.value.push({
+                description: data.title,
+                date: data.date.toDate(),
+            });
         })
     })
+
+    const attributes = computed(() => {
+        if (currentEvents.value){
+            const arr =  [] as any [];
+            currentEvents.value.forEach((elem :any)=>{
+                arr.push({
+                    popover:{
+                        label: elem.description
+                    },
+                    dot: {
+                        color: 'red'
+                    },
+                    dates: elem.date
+                })
+            })
+            return arr;
+        }
+        }
+    )
 
 </script>
 
