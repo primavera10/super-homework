@@ -20,7 +20,28 @@
             Add new event
         </router-link>
         <div class="text-center mt-8 mb-10">
-            <Calendar expanded :attributes="attributes"/>
+            <Calendar expanded :attributes="attributes">
+                <template #day-popover="{attributes, dayTitle}">
+                    <div class="text-xs text-gray-700 dark:text-gray-300">
+                        {{ dayTitle }}
+                    </div>
+                    <ul>
+                        <li
+                            v-for="{ key, customData } in attributes"
+                            @click="redirectToHomework"
+                            :key="key"
+                            class="block cursor-pointer  text-gray-700 dark:text-gray-300 bg-red-100"
+                        >
+                            <div>
+                                {{ customData.title }}
+                            </div>
+                            <div class="text-xs">
+                                {{customData.message}}
+                            </div>
+                        </li>
+                    </ul>
+                </template>
+            </Calendar>
         </div>
     </div>
 </template>
@@ -32,6 +53,7 @@
     import { watch, ref, computed } from "vue";
     import { Calendar } from 'v-calendar';
     import 'v-calendar/style.css';
+    import router from "@/router";
 
     const user = useCurrentUser();
     const role = ref('');
@@ -57,8 +79,9 @@
                 events.forEach((doc: any) => {
                     const data = doc.data()
                     currentEvents.value.push({
-                        description: data.title,
+                        title: data.title,
                         date: data.date.toDate(),
+                        message: data.message,
                     });
                 })
             }
@@ -69,16 +92,19 @@
     const attributes = computed(() => {
             return currentEvents.value.map((elem: any) => ({
                     popover: {
-                        label: elem.description
+                        visibility: 'click',
                     },
                     dot: {
                         color: 'red'
                     },
-                    dates: elem.date
+                    customData: elem,
+                    dates: elem.date,
                 })
             );
         }
     )
+
+    const redirectToHomework = () => router.push({path: '/main-page/add-homework'})
 
 </script>
 
