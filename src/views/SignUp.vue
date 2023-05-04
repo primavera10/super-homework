@@ -108,7 +108,7 @@
         }
     }
 
-    const role = ref('');
+    const role = ref('student');
 
 </script>
 
