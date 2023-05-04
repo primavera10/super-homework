@@ -22,7 +22,13 @@
             <textarea v-model="message"
                       class="border-lightGray rounded-lg p-2 mt-4 border w-full focus:outline-primary"/>
         </div>
-        <div v-if="checkData" class="text-red mt-3">
+        <div class="mt-8">
+            <div class="text-lg mb-4">
+                4. Add students
+            </div>
+            <multiselect :options="students" :multiple="true" track-by="email" v-model="selectedStudents" label="email" />
+        </div>
+        <div v-if="checkData" class="text-red mt-10">
             All fields must be fulfilled
         </div>
         <div @click="addEventData"
@@ -37,22 +43,24 @@
 </template>
 <script setup lang="ts">
     import { DatePicker } from 'v-calendar';
-    import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-    import { onMounted, ref } from "vue";
-    import { db } from "../firebase"
-    import { useCurrentUser } from 'vuefire'
+    import { collection, addDoc, query, where, serverTimestamp } from "firebase/firestore";
+    import {  ref } from "vue";
+    import { db } from "@/firebase"
+    import { useCurrentUser, useCollection } from 'vuefire'
+    import Multiselect from 'vue-multiselect'
 
     const selectedDate = ref()
     const message = ref('');
     const title = ref('')
     const checkData = ref(false);
     const user = useCurrentUser();
+    const selectedStudents = ref([]);
 
     async function addEventData() {
         if (!user.value) {
             return;
         }
-        if (!selectedDate.value || !title.value || !message.value) {
+        if (!selectedDate.value || !title.value || !message.value || selectedStudents.value.length === 0 )  {
             checkData.value = true;
             return;
         }
@@ -65,11 +73,16 @@
             createdBy: {
                 email: user.value.email,
                 uid: user.value.uid
-            }
+            },
+            students: selectedStudents.value.map((stud:any) => stud.email),
         })
         console.log("Document written with ID: ", docRef.id)
         alert('A new event was created')
     }
 
+    const students = useCollection(query(collection(db, "user-details"), where ("role", "==", "student")))
+
 
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>

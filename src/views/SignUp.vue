@@ -59,7 +59,7 @@
     import { ref } from 'vue';
     import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
     import { doc, setDoc } from "firebase/firestore";
-    import { db } from "../firebase"
+    import { db } from "@/firebase"
 
     const email = ref('');
     const password = ref('');
@@ -96,6 +96,7 @@
                 const user = userCredential.user;
                 await setDoc(doc(db, "user-details", user.uid), {
                     role: role.value,
+                    email: email.value,
                 })
                 alert('You are registered')
             } catch (error:any) {
