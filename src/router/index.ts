@@ -34,7 +34,7 @@ const router = createRouter({
       component: AddEvent
     },
     {
-      path: '/main-page/add-homework',
+      path: '/main-page/event/:id',
       name:'Add homework',
       component: AddHomework
     }

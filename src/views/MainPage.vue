@@ -28,7 +28,7 @@
                     <ul>
                         <li
                             v-for="{ key, customData } in attributes"
-                            @click="redirectToHomework"
+                            @click="redirectToHomework(customData.id)"
                             :key="key"
                             class="block cursor-pointer  text-gray-700 dark:text-gray-300 bg-red-100"
                         >
@@ -79,11 +79,14 @@
                 events.forEach((doc: any) => {
                     const data = doc.data()
                     currentEvents.value.push({
+                        id: doc.id,
                         title: data.title,
                         date: data.date.toDate(),
                         message: data.message,
+                        createdBy: data.createdBy,
                     });
                 })
+                console.log(currentEvents.value)
             }
         }
     }, { immediate: true })
@@ -104,7 +107,7 @@
         }
     )
 
-    const redirectToHomework = () => router.push({path: '/main-page/add-homework'})
+    const redirectToHomework = (eventId:string) => router.push({path: `/main-page/event/${eventId}`})
 
 </script>
 
