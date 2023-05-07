@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, type DocumentData, type QueryDocumentSnapshot, type SnapshotOptions } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDM8f8ZaubFUqdl3TNCXy4V6pnRfHywgCE",
@@ -14,4 +14,32 @@ const firebaseConfig = {
 export const firebaseApp = initializeApp(firebaseConfig);
 export const db = getFirestore(firebaseApp);
 
+export interface CalendarEvent {
+    date: Date,
+    title: string,
+    message: string,
+    students: Array<string>,
+    createdBy: {
+        uid: string,
+        email: string,
+    },
+    createdAt: Date,
+}
+
+export const eventConverter = {
+    toFirestore(event: CalendarEvent): DocumentData {
+        return { ...event };
+    },
+    fromFirestore(
+        snapshot: QueryDocumentSnapshot,
+        options: SnapshotOptions,
+    ): CalendarEvent {
+        const data = snapshot.data(options)!;
+        return {
+            ...data,
+            date: data.date.toDate(),
+            createdAt: data.createdAt.toDate(),
+        } as CalendarEvent;
+    }
+}
 
