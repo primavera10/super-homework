@@ -19,10 +19,21 @@
             <div class="text-2xl font-bold">
                 Your answer:
             </div>
+            <template v-if="files">
+                <p>You have selected: <b>{{ files.length }} files</b></p>
+                <li v-for="file of files" :key="file.name">
+                    {{ file.name }}
+                </li>
+            </template>
             <div class="flex gap-4">
                 <textarea class="border-lightGray rounded-lg p-2 mt-4 border w-full focus:outline-primary"
                           v-model="answer"/>
-                <input type="file" ref="fileInput">
+                <button @click="open" ref="fileInput">
+                    Select your files
+                </button>
+                <button type="button" :disabled="!files" @click="reset()">
+                    Reset
+                </button>
             </div>
             <div class="mt-6 text-red">
                 Please either upload a file or write a message
@@ -37,13 +48,16 @@
 <script setup lang="ts">
 
     import { useRoute } from "vue-router";
-    import { getDoc, doc, setDoc } from "firebase/firestore";
+    import { getDoc, doc,arrayUnion, updateDoc } from "firebase/firestore";
     import { db, eventConverter, type CalendarEvent } from "@/firebase";
     import { useCurrentUser } from 'vuefire'
-    import { ref } from "vue";
+    import { ref, watch } from "vue";
     import * as dayjs from 'dayjs'
     import { getStorage, ref as fileRef, uploadBytes } from "firebase/storage";
     import { v4 as uuidv4 } from 'uuid';
+    import { useFileDialog } from "@vueuse/core";
+
+    const { files, open, reset } = useFileDialog()
 
 
     const event = ref<CalendarEvent>();
@@ -62,44 +76,63 @@
     const storage = getStorage();
     const errorMessage = ref(false);
 
+    watch(files, () => {
+        if (files.value) {
+            console.log(files.value)
+        }
+    })
+
+
     async function submitAnswer() {
-        if (answer.value && fileInput) {
-            const documentRef = fileRef(storage, `${uuidv4()}`);
+        if (answer.value && files.value) {
             errorMessage.value = false;
-            uploadBytes(documentRef, fileInput.value.files[0]).then((snapshot) => {
-                console.log('Uploaded a blob or file!')
-            })
-            await setDoc(doc(db, "events", id), {
-                answers: [{
+            const idArray = [];
+            for (let i = 0; i < files.value?.length; i++) {
+                const uid = uuidv4()
+                const documentRef = fileRef(storage, uid);
+                await uploadBytes(documentRef, files.value[i])
+                idArray.push(uid);
+            }
+             updateDoc(doc(db, "events", id), {
+                answers: arrayUnion({
                     addedAt: Date.now(),
                     message: answer.value,
-                    documentLink: documentRef,
+                    documentLink: idArray,
                     email: user.value!.email,
-                }
-                ]
-            })
-        } else if (fileInput.value && !answer.value) {
+                })
+            }).then(()=>{
+                alert('Upload successfully')
+             })
+        } else if (files.value && !answer.value) {
             errorMessage.value = false;
-            const documentRef = fileRef(storage, `${uuidv4()}`);
-            uploadBytes(documentRef, fileInput.value.files[0]).then((snapshot) => {
-                console.log('Uploaded a blob or file!')
-            })
-            await setDoc(doc(db, "events", id), {
-                answers: [{
+            const idArray = [];
+            for (let i = 0; i < files.value?.length; i++) {
+                const uid = uuidv4()
+                const documentRef = fileRef(storage, uid);
+                await uploadBytes(documentRef, files.value[i])
+                idArray.push(uid);
+            }
+            updateDoc(doc(db, "events", id), {
+                answers: arrayUnion({
                     addedAt: Date.now(),
-                    documentLink: documentRef,
+                    message: '-',
+                    documentLink: idArray,
                     email: user.value!.email,
-                }
-                ]
+                })
+            }).then(()=>{
+                alert('Upload successfully')
             })
-        } else if (answer.value && !fileInput.value) {
+        } else if (answer.value && !files.value) {
             errorMessage.value = false;
-            await setDoc(doc(db, "events", id), {
-                answers: [{
+            updateDoc(doc(db, "events", id), {
+                answers: arrayUnion({
                     addedAt: Date.now(),
                     message: answer.value,
+                    documentLink: '-',
                     email: user.value!.email,
-                }]
+                })
+            }).then(()=>{
+                alert('Upload successfully')
             })
         } else {
             return errorMessage.value = true
