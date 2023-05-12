@@ -1,6 +1,15 @@
 <template>
     <div v-if="event && user" class="container bg-white">
-        <div class="text-3xl font-bold text-primary mt-12">
+        <div v-if="modalOpen" @click.self="redirectToMain"
+             class="fixed left-0 top-0 h-screen flex items-center justify-center w-screen modal-bg-color">
+            <div class="bg-white w-fit text-black rounded-xl p-10">
+                Your homework added successfully!
+            </div>
+        </div>
+        <router-link to="/main-page" class="block mt-4 underline cursor-pointer">
+            Go back
+        </router-link>
+        <div class="text-3xl font-bold text-primary mt-10">
             Homework
         </div>
         <div class="text-red mt-3 text-lg">
@@ -9,7 +18,7 @@
         <div class="text-darkGray mt-2 ">
             Created by {{ event.createdBy.email }} at {{ dayjs(event.createdAt).format('DD/MM/YYYY') }}
         </div>
-        <div class="mt-8 text-2xl font-bold">
+        <div class="mt-16 text-2xl font-bold">
             Name: {{ event.title }}
         </div>
         <div class="mt-4 text-lg">
@@ -25,15 +34,18 @@
                     {{ file.name }}
                 </li>
             </template>
-            <div class="flex gap-4">
-                <textarea class="border-lightGray rounded-lg p-2 mt-4 border w-full focus:outline-primary"
+            <div class="flex gap-4   justify-center mt-4">
+                <textarea class="border-lightGray rounded-lg p-2  border w-full focus:outline-primary"
                           v-model="answer"/>
-                <button @click="open" ref="fileInput">
-                    Select your files
-                </button>
-                <button type="button" :disabled="!files" @click="reset()">
-                    Reset
-                </button>
+                <div class="flex flex-col gap-2 items-center">
+                    <button @click="open" ref="fileInput"
+                            class="bg-cyan hover:bg-primary w-fit text-white rounded-2xl p-2">
+                        Select your files
+                    </button>
+                    <button type="button" class="underline w-fit cursor-pointer" :disabled="!files" @click="reset()">
+                        Reset
+                    </button>
+                </div>
             </div>
             <div class="mt-6 text-red">
                 Please either upload a file or write a message
@@ -48,7 +60,7 @@
 <script setup lang="ts">
 
     import { useRoute } from "vue-router";
-    import { getDoc, doc,arrayUnion, updateDoc } from "firebase/firestore";
+    import { getDoc, doc, arrayUnion, updateDoc } from "firebase/firestore";
     import { db, eventConverter, type CalendarEvent } from "@/firebase";
     import { useCurrentUser } from 'vuefire'
     import { ref, watch } from "vue";
@@ -56,6 +68,7 @@
     import { getStorage, ref as fileRef, uploadBytes } from "firebase/storage";
     import { v4 as uuidv4 } from 'uuid';
     import { useFileDialog } from "@vueuse/core";
+    import router from "@/router";
 
     const { files, open, reset } = useFileDialog()
 
@@ -93,16 +106,16 @@
                 await uploadBytes(documentRef, files.value[i])
                 idArray.push(uid);
             }
-             updateDoc(doc(db, "events", id), {
+            updateDoc(doc(db, "events", id), {
                 answers: arrayUnion({
                     addedAt: Date.now(),
                     message: answer.value,
                     documentLink: idArray,
                     email: user.value!.email,
                 })
-            }).then(()=>{
-                alert('Upload successfully')
-             })
+            }).then(() => {
+                modalOpen.value = true
+            })
         } else if (files.value && !answer.value) {
             errorMessage.value = false;
             const idArray = [];
@@ -119,8 +132,8 @@
                     documentLink: idArray,
                     email: user.value!.email,
                 })
-            }).then(()=>{
-                alert('Upload successfully')
+            }).then(() => {
+                modalOpen.value = true
             })
         } else if (answer.value && !files.value) {
             errorMessage.value = false;
@@ -131,17 +144,28 @@
                     documentLink: '-',
                     email: user.value!.email,
                 })
-            }).then(()=>{
-                alert('Upload successfully')
+            }).then(() => {
+                modalOpen.value = true
             })
         } else {
             return errorMessage.value = true
         }
     }
 
+    const modalOpen = ref(false);
+
+    function redirectToMain() {
+        modalOpen.value = false;
+         router.push({ path: `/main-page` })
+        return;
+    }
+
 
 </script>
 
 <style scoped>
+    .modal-bg-color {
+        background-color: rgba(2, 6, 23, 0.2)
+    }
 
 </style>
