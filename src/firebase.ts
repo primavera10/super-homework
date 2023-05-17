@@ -25,6 +25,7 @@ export interface CalendarEvent {
         email: string,
     },
     createdAt: Date,
+    answers: Array <any>,
 }
 
 export const eventConverter = {
