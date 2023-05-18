@@ -27,6 +27,9 @@
                 </td>
                 <td class="border">
                     {{ hasHomework(student) }}
+                    <span v-if="hasHomework(student)" class="underline cursor-pointer" @click="seeHomework(student)">
+                        Check
+                    </span>
                 </td>
                 <td class="border">
                     {{hasMark(student)}}
@@ -51,6 +54,7 @@
     const event = ref<CalendarEvent>();
     const groupedUsers = ref<any>()
     import * as dayjs from 'dayjs'
+    import router from "@/router";
 
     getDoc(doc(db, 'events', id).withConverter(eventConverter))
         .then(e => {
@@ -75,6 +79,13 @@
             return groupedUsers.value[student].mark ? groupedUsers.value[student].mark : '-';
         } else return '-';
     }
+
+    function seeHomework(student:string){
+        if (hasHomework(student)){
+            return router.push({path:`/main-page/homework/${id}/${encodeURIComponent(student)}`})
+        }
+    }
+
 </script>
 
 <style scoped>
