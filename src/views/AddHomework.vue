@@ -108,7 +108,7 @@
             }
             updateDoc(doc(db, "events", id), {
                 answers: arrayUnion({
-                    addedAt: Date.now(),
+                    addedAt: new Date(),
                     message: answer.value,
                     documentLink: idArray,
                     email: user.value!.email,
@@ -128,7 +128,7 @@
             updateDoc(doc(db, "events", id), {
                 answers: arrayUnion({
                     addedAt: Date.now(),
-                    message: '-',
+                    message: '',
                     documentLink: idArray,
                     email: user.value!.email,
                 })
@@ -139,9 +139,9 @@
             errorMessage.value = false;
             updateDoc(doc(db, "events", id), {
                 answers: arrayUnion({
-                    addedAt: Date.now(),
+                    addedAt: new Date(),
                     message: answer.value,
-                    documentLink: '-',
+                    documentLink: [],
                     email: user.value!.email,
                 })
             }).then(() => {

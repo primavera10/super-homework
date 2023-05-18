@@ -32,7 +32,7 @@
                     </span>
                 </td>
                 <td class="border">
-                    {{hasMark(student)}}
+                    {{ hasMark(student) }}
                 </td>
             </tr>
             </tbody>
@@ -82,7 +82,7 @@
 
     function seeHomework(student:string){
         if (hasHomework(student)){
-            return router.push({path:`/main-page/homework/${id}/${encodeURIComponent(student)}`})
+            return router.push({path:`/main-page/homework/${id}/${encodeURIComponent(student)}/`})
         }
     }
 

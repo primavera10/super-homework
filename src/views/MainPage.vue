@@ -86,7 +86,6 @@
                         createdBy: data.createdBy,
                     });
                 })
-                console.log(currentEvents.value)
             }
         }
     }, { immediate: true })
