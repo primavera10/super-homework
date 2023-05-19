@@ -6,32 +6,32 @@
         <div class="text-3xl font-bold text-primary mt-10">
             Check students' homework for {{ dayjs(event.date).format('DD/MM/YYYY HH:mm') }}
         </div>
-        <table class="w-full text-center mt-10 border p-3 border-collapse">
+        <table class="w-full text-center mt-10 border rounded-lg border-collapse p-3 border-lightGray">
             <thead>
-            <tr>
-                <th class="border">
+            <tr >
+                <th class=" border border-lightGray rounded-lg">
                     Student
                 </th>
-                <th class="border">
+                <th class="border border-lightGray rounded-lg">
                     Sent
                 </th>
-                <th class="border">
+                <th class="border border-lightGray rounded-lg">
                     Marked
                 </th>
             </tr>
             </thead>
-            <tbody>
-            <tr v-for="student in event.students" :key="student">
-                <td class="border">
+            <tbody >
+            <tr v-for="student in event.students" :key="student" >
+                <td class="border border-lightGray rounded-lg">
                     {{ student }}
                 </td>
-                <td class="border">
+                <td class="border border-lightGray rounded-lg">
                     {{ hasHomework(student) }}
                     <span v-if="hasHomework(student)" class="underline cursor-pointer" @click="seeHomework(student)">
                         Check
                     </span>
                 </td>
-                <td class="border">
+                <td class="border border-lightGray rounded-lg">
                     {{ hasMark(student) }}
                 </td>
             </tr>

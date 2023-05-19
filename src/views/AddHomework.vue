@@ -112,6 +112,7 @@
                     message: answer.value,
                     documentLink: idArray,
                     email: user.value!.email,
+                    uid: user.value!.uid
                 })
             }).then(() => {
                 modalOpen.value = true
@@ -131,6 +132,7 @@
                     message: '',
                     documentLink: idArray,
                     email: user.value!.email,
+                    uid: user.value!.uid
                 })
             }).then(() => {
                 modalOpen.value = true
@@ -143,6 +145,7 @@
                     message: answer.value,
                     documentLink: [],
                     email: user.value!.email,
+                    uid: user.value!.uid
                 })
             }).then(() => {
                 modalOpen.value = true

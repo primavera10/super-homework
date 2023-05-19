@@ -1,5 +1,11 @@
 <template>
-    <div v-if="event && answers" class="container">
+    <div v-if="event && answers" class="container bg-white">
+        <div v-if="modalOpen" @click.self="redirectBack"
+             class="fixed left-0 top-0 h-screen flex items-center justify-center w-screen modal-bg-color">
+            <div class="bg-white w-fit text-black rounded-xl p-10">
+                Your mark was successfully placed!
+            </div>
+        </div>
         <router-link :to="`/main-page/homework/${id}`" class="block mt-4 underline cursor-pointer">
             Go back
         </router-link>
@@ -33,16 +39,34 @@
                 </li>
             </ul>
         </div>
+        <div class="mt-20">
+            <div class="mb-3 text-lg">
+                Your mark
+            </div>
+            <div class="flex gap-4">
+                <input
+                    class="border-lightGray focus:outline-cyan border rounded-lg p-3"
+                    type="number"
+                    v-model="mark"/>
+                <button class="rounded-xl bg-primary hover:bg-cyan text-white p-3" @click="sendMark">
+                    Submit
+                </button>
+            </div>
+            <div v-if="checkMark" class="mt-4 text-red">
+                Please put a mark
+            </div>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
     import { defineComponent, ref } from "vue";
     import { useRoute } from "vue-router";
-    import { getDoc, doc } from "firebase/firestore";
+    import { getDoc,updateDoc, doc } from "firebase/firestore";
     import { db, eventConverter, type CalendarEvent } from "@/firebase";
     import * as dayjs from 'dayjs'
     import FileLink from "@/components/FileLink.vue";
+    import router from "@/router";
 
 
     export default defineComponent({
@@ -54,12 +78,37 @@
             const email = route.params.email
             const answers = ref<Array<any>>()
             const event = ref<CalendarEvent>()
+            const studentUid = ref ('')
+            const checkMark = ref (false)
             getDoc(doc(db, 'events', id).withConverter(eventConverter)).then((e) => {
                 event.value = e.data()
                 answers.value = event.value?.answers.filter((a: any) => a.email === email)
+                studentUid.value = answers.value![0].uid
             })
+            const mark = ref<number>();
+            const modalOpen = ref(false);
+
+            function redirectBack() {
+                modalOpen.value = false;
+                router.push({ path: `/main-page` })
+                return;
+            }
+            function sendMark(){
+                if (mark.value){
+                    checkMark.value = false
+                    const docRef = doc(db, 'events', id)
+                    updateDoc(docRef,{
+                        [`marks.${studentUid.value}`]: mark.value
+                    }).then(()=>{
+                        modalOpen.value = true
+                    })
+                } else {
+                   return checkMark.value = true
+                }
+
+            }
             return {
-                id, email, answers, event, dayjs
+                id, email, answers, event, mark, dayjs, studentUid, sendMark, checkMark, modalOpen, redirectBack
             }
         }
     })
