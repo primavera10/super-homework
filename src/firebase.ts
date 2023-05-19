@@ -24,6 +24,9 @@ export interface CalendarEvent {
         uid: string,
         email: string,
     },
+    marks: {
+        [key: string] : number
+    },
     createdAt: Date,
     answers: Array<any>,
 }

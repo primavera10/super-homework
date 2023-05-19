@@ -90,7 +90,7 @@
 
             function redirectBack() {
                 modalOpen.value = false;
-                router.push({ path: `/main-page` })
+                router.push({ path: `/main-page/homework/${id}` })
                 return;
             }
             function sendMark(){

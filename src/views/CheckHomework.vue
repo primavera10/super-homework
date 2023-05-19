@@ -8,7 +8,7 @@
         </div>
         <table class="w-full text-center mt-10 border rounded-lg border-collapse p-3 border-lightGray">
             <thead>
-            <tr >
+            <tr>
                 <th class=" border border-lightGray rounded-lg">
                     Student
                 </th>
@@ -20,8 +20,8 @@
                 </th>
             </tr>
             </thead>
-            <tbody >
-            <tr v-for="student in event.students" :key="student" >
+            <tbody>
+            <tr v-for="student in event.students" :key="student">
                 <td class="border border-lightGray rounded-lg">
                     {{ student }}
                 </td>
@@ -75,14 +75,18 @@
     }
 
     function hasMark(student: string) {
-        if (hasHomework(student)){
-            return groupedUsers.value[student].mark ? groupedUsers.value[student].mark : '-';
-        } else return '-';
+        if (hasHomework(student)) {
+            const uid = groupedUsers.value[student][0].uid
+            return event.value!.marks[uid] ?  event.value!.marks[uid] : '-'
+        } else {
+            return '-';
+        }
+
     }
 
-    function seeHomework(student:string){
-        if (hasHomework(student)){
-            return router.push({path:`/main-page/homework/${id}/${encodeURIComponent(student)}/`})
+    function seeHomework(student: string) {
+        if (hasHomework(student)) {
+            return router.push({ path: `/main-page/homework/${id}/${encodeURIComponent(student)}/` })
         }
     }
 
