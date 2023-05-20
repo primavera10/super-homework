@@ -36,7 +36,7 @@
                                 {{ customData.title }}
                             </div>
                             <div class="text-xs">
-                                {{customData.message}}
+                                {{ customData.message }}
                             </div>
                         </li>
                     </ul>
@@ -86,7 +86,6 @@
                         createdBy: data.createdBy,
                     });
                 })
-                console.log(currentEvents.value)
             }
         }
     }, { immediate: true })
@@ -107,7 +106,13 @@
         }
     )
 
-    const redirectToHomework = (eventId:string) => router.push({path: `/main-page/event/${eventId}`})
+    const redirectToHomework = (eventId: string) => {
+        if (role.value === 'student') {
+            router.push({ path: `/main-page/event/${eventId}` })
+        } else {
+            router.push({ path: `/main-page/homework/${eventId}` })
+        }
+    }
 
 </script>
 

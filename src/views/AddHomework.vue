@@ -108,10 +108,11 @@
             }
             updateDoc(doc(db, "events", id), {
                 answers: arrayUnion({
-                    addedAt: Date.now(),
+                    addedAt: new Date(),
                     message: answer.value,
                     documentLink: idArray,
                     email: user.value!.email,
+                    uid: user.value!.uid
                 })
             }).then(() => {
                 modalOpen.value = true
@@ -128,9 +129,10 @@
             updateDoc(doc(db, "events", id), {
                 answers: arrayUnion({
                     addedAt: Date.now(),
-                    message: '-',
+                    message: '',
                     documentLink: idArray,
                     email: user.value!.email,
+                    uid: user.value!.uid
                 })
             }).then(() => {
                 modalOpen.value = true
@@ -139,10 +141,11 @@
             errorMessage.value = false;
             updateDoc(doc(db, "events", id), {
                 answers: arrayUnion({
-                    addedAt: Date.now(),
+                    addedAt: new Date(),
                     message: answer.value,
-                    documentLink: '-',
+                    documentLink: [],
                     email: user.value!.email,
+                    uid: user.value!.uid
                 })
             }).then(() => {
                 modalOpen.value = true

@@ -5,6 +5,8 @@ import SignIn from '../views/SignIn.vue'
 import MainPage from '../views/MainPage.vue'
 import AddEvent from '../views/AddEvent.vue'
 import AddHomework from '../views/AddHomework.vue'
+import CheckHomework from '../views/CheckHomework.vue'
+import UserHomework from '../views/UserHomework.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -37,6 +39,16 @@ const router = createRouter({
       path: '/main-page/event/:id',
       name:'Add homework',
       component: AddHomework
+    },
+    {
+      path:'/main-page/homework/:id',
+      name:'Check homework',
+      component: CheckHomework
+    },
+    {
+      path:'/main-page/homework/:id/:email',
+      name:'User homework',
+      component: UserHomework
     }
   ]
 })

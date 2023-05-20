@@ -24,7 +24,11 @@ export interface CalendarEvent {
         uid: string,
         email: string,
     },
+    marks: {
+        [key: string] : number
+    },
     createdAt: Date,
+    answers: Array<any>,
 }
 
 export const eventConverter = {
@@ -36,8 +40,15 @@ export const eventConverter = {
         options: SnapshotOptions,
     ): CalendarEvent {
         const data = snapshot.data(options)!;
+        const answers = data.answers ? data.answers : [];
         return {
             ...data,
+            answers: answers.map((a: any) => {
+                return {
+                    ...a,
+                    addedAt: a.addedAt.toDate()
+                }
+            }),
             date: data.date.toDate(),
             createdAt: data.createdAt.toDate(),
         } as CalendarEvent;
