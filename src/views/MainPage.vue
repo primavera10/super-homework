@@ -38,6 +38,9 @@
                             <div class="text-xs">
                                 {{ customData.message }}
                             </div>
+                            <div class="mt-1 text-red">
+                                Mark {{ customData.mark }}
+                            </div>
                         </li>
                     </ul>
                 </template>
@@ -84,6 +87,8 @@
                         date: data.date.toDate(),
                         message: data.message,
                         createdBy: data.createdBy,
+                        mark: data.marks,
+                        answers: data.answers,
                     });
                 })
             }
@@ -99,7 +104,10 @@
                     dot: {
                         color: 'red'
                     },
-                    customData: elem,
+                    customData: {
+                        ...elem,
+                        mark: showMark(elem),
+                    },
                     dates: elem.date,
                 })
             );
@@ -107,11 +115,28 @@
     )
 
     const redirectToHomework = (eventId: string) => {
-        if (role.value === 'student') {
+        if (role.value === 'student' && !hasHomework(eventId)) {
             router.push({ path: `/main-page/event/${eventId}` })
-        } else {
+        } else if (role.value === 'teacher') {
             router.push({ path: `/main-page/homework/${eventId}` })
+        } else {
+            return;
         }
+    }
+
+    function hasHomework(id: string) {
+        const event = currentEvents.value.find((elem: any) => elem.id === id)
+        if (!event || !event.answers) {
+            return false;
+        }
+        const hasAnswer = event.answers.filter((a: any) => a.uid === user.value!.uid)
+        return hasAnswer.length > 0;
+    }
+
+    function showMark(elem: any) {
+        if (hasHomework(elem.id)) {
+            return elem.mark[user.value!.uid]
+        } else return '-';
     }
 
 </script>
