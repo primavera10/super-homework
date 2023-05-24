@@ -84,6 +84,8 @@
                         date: data.date.toDate(),
                         message: data.message,
                         createdBy: data.createdBy,
+                        marks: data.marks,
+                        answers: data.answers,
                     });
                 })
             }
@@ -107,11 +109,19 @@
     )
 
     const redirectToHomework = (eventId: string) => {
-        if (role.value === 'student') {
+        if (role.value === 'student' && !hasHomework(eventId)) {
             router.push({ path: `/main-page/event/${eventId}` })
-        } else {
+        } else if (role.value === 'teacher') {
             router.push({ path: `/main-page/homework/${eventId}` })
+        } else {
+            return;
         }
+    }
+
+    function hasHomework(id: string) {
+        const event = currentEvents.value.filter((elem: any) => elem.id === id)
+        const hasAnswer = event.answers.filter((a: any) => a.uid === user.value!.uid)
+        return hasAnswer.length > 0;
     }
 
 </script>
